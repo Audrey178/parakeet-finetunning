@@ -11,7 +11,7 @@ if __name__ == "__main__":
       with open(train_text_path, 'a', encoding='utf-8') as f:
         f.write(f"{text}\n")
   
-  tokenize = spm.SentencePieceTrainer.train(f'--input={train_text_path} --model_prefix=tokenizer --vocab_size=6000')
+  tokenize = spm.SentencePieceTrainer.train(f'--input={train_text_path} --model_prefix=tokenizer --vocab_size=2000')
   input_vocab = "tokenizer.vocab"
   output_vocab = "vocab.txt"
 

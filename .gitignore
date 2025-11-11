@@ -1,2 +1,6 @@
 data/
 tokenizer/
+cache/
+prj/
+venv/
+Model-vi-10.nemo

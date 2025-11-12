@@ -86,7 +86,7 @@ class HuggingFaceDataFormatter(LocalDataFormatter):
         
         for i in range(0, math.ceil(len(dataset)/ self.num_samples)):
             segment = dataset.select(list(range(i*self.num_samples, min((i + 1)*self.num_samples, len(dataset)))))
-            yield segment.cast_column('audio', Audio(decode=True))
+            yield segment.cast_column('audio', Audio(decode=False))
 
     def convert_data(self, cache_dir=None, batch_size=500, num_workers=4, keep_in_memory=False):
         from datasets import load_dataset
@@ -109,11 +109,10 @@ class HuggingFaceDataFormatter(LocalDataFormatter):
         temp_datasets = segment
         seg_samples = []
         for idx, row in tqdm(enumerate(temp_datasets), total=len(temp_datasets), desc=f'Preprocessing segment {seg_idx}'):
-            audio = row['audio']
+            audio_bytes = io.BytesIO(row['audio']['bytes'])
             trans = format_string(row['transcription'])
                 
-            data = audio['array']
-            sr = audio['sampling_rate']
+            data, sr = sf.read(audio_bytes)
                 
             if data is not None:
                 fname = f"hf_{name}_{seg_idx:03d}_{idx:06d}.wav"
